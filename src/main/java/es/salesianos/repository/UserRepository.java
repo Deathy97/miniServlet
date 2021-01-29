@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import connection.ConnectionH2;
 import connection.ConnectionManager;
@@ -56,6 +58,36 @@ public class UserRepository {
 			manager.close(conn);
 		}
 
+	}
+
+	public List<User> getAllUsers() {
+		Connection conn = manager.open(jdbcUrl);
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		String query = "SELECT dni, nombre, apellido FROM USER";
+		List<User> userList = new ArrayList<>();
+
+		try {
+			preparedStatement = conn.prepareStatement(query);
+			resultSet = preparedStatement.executeQuery();
+
+			while (resultSet.next()) {
+				User user = new User();
+				user.setDni(resultSet.getString("dni"));
+				user.setNombre(resultSet.getString("nombre"));
+				user.setApellido(resultSet.getString("apellido"));
+
+				userList.add(user);
+			}
+
+			return userList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		} finally {
+			manager.close(preparedStatement);
+			manager.close(conn);
+		}
 	}
 
 }

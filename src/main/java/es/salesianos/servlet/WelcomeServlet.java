@@ -20,15 +20,15 @@ public class WelcomeServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		doAction(req, resp);
+		doPostAction(req, resp);
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		doAction(req, resp);
+		//Nothig to do here
 	}
 
-	private void doAction(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+	private void doPostAction(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		User user = assembler.createUserFromRequest(req);
 		if (!userRepository.findUser(user)) {
 			userRepository.insert(user);
@@ -43,8 +43,9 @@ public class WelcomeServlet extends HttpServlet {
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/welcome.jsp");
 		dispatcher.forward(req, resp);
 	}
-	
-	protected void errorRedirect(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+
+	protected void errorRedirect(HttpServletRequest req, HttpServletResponse resp)
+			throws IOException, ServletException {
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/error.jsp");
 		dispatcher.forward(req, resp);
 	}
